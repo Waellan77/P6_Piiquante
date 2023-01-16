@@ -1,4 +1,6 @@
 const express = require('express')
+
+// Mongoose import //
 const mongoose = require('mongoose')
 const path = require('path')
 
@@ -7,6 +9,7 @@ const userRoutes = require('./routes/user')
 
 const app = express()
 
+// connection to the mongoDB database //
 mongoose.connect('mongodb+srv://Waellan:Arnold34Bart70@cluster0.xyadqry.mongodb.net/?retryWrites=true&w=majority',
     {
         useNewUrlParser: true,
@@ -28,4 +31,5 @@ app.use('/api/sauces', saucesRoutes)
 app.use('/api/auth', userRoutes)
 app.use('/images', express.static(path.join(__dirname, 'images')))
 
+// Module export //
 module.exports = app
