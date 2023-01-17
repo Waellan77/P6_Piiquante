@@ -1,4 +1,7 @@
+// import the HTTP package from Node and use it to create a server //
 const http = require('http')
+
+// import app.js //
 const app = require('./app')
 
 const normalizePort = val => {
@@ -13,6 +16,8 @@ const normalizePort = val => {
     return false
 }
 const port = normalizePort(process.env.PORT || '3000')
+
+// setting the port with the express set method //
 app.set('port', port)
 
 const errorHandler = error => {
@@ -35,6 +40,7 @@ const errorHandler = error => {
     }
 }
 
+// create a server with the method createServer() and uses the argument app  //
 const server = http.createServer(app)
 
 server.on('error', errorHandler)
@@ -44,4 +50,5 @@ server.on('listening', () => {
     console.log('Listening on ' + bind)
 })
 
+// starts the http server and listens for connections //
 server.listen(port)

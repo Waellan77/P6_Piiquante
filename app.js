@@ -1,7 +1,7 @@
-// Import express //
+// import express //
 const express = require('express')
 
-// Mongoose import //
+// mongoose import //
 const mongoose = require('mongoose')
 
 
@@ -10,6 +10,7 @@ const path = require('path')
 const saucesRoutes = require('./routes/sauces')
 const userRoutes = require('./routes/user')
 
+// create an express application //
 const app = express()
 
 // connection to the mongoDB database //
@@ -34,5 +35,5 @@ app.use('/api/sauces', saucesRoutes)
 app.use('/api/auth', userRoutes)
 app.use('/images', express.static(path.join(__dirname, 'images')))
 
-// Module export //
+// module export //
 module.exports = app
