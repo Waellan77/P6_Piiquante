@@ -4,6 +4,7 @@ const http = require('http')
 // import app.js //
 const app = require('./app')
 
+// normalizePort function returns a valid port, as a number or a string //
 const normalizePort = val => {
     const port = parseInt(val, 10)
 
@@ -20,6 +21,7 @@ const port = normalizePort(process.env.PORT || '3000')
 // setting the port with the express set method //
 app.set('port', port)
 
+// errorHandler function searches for the different errors and handles them appropriately //
 const errorHandler = error => {
     if (error.syscall !== 'listen') {
         throw error
