@@ -24,6 +24,7 @@ mongoose.connect('mongodb+srv://Waellan:Arnold34Bart70@cluster0.xyadqry.mongodb.
 
 app.use(express.json())
 
+// allows requests from all browsers to the API. CORS (Cross-Origin Request Sharing) //
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*')
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization')
