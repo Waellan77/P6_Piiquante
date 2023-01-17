@@ -16,5 +16,5 @@ const saucesSchema = mongoose.Schema({
     usersDisliked: { type: [String] }
 })
 
-// export models sauces //
+// export model sauce //
 module.exports = mongoose.model('sauces', saucesSchema)
