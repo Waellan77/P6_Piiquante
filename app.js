@@ -22,6 +22,7 @@ mongoose.connect('mongodb+srv://Waellan:Arnold34Bart70@cluster0.xyadqry.mongodb.
     .then(() => console.log('Connexion à MongoDB réussie !'))
     .catch(() => console.log('Connexion à MongoDB échouée !'))
 
+// use a middleware that extracts the json body to make post request //
 app.use(express.json())
 
 // allows requests from all browsers to the API. CORS (Cross-Origin Request Sharing) //
