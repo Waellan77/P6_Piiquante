@@ -7,7 +7,9 @@ const jwt = require('jsonwebtoken')
 // Import models of user //
 const User = require('../models/User')
 
+// allows to register a new user in the database //
 exports.signup = (req, res, next) => {
+    // hash password //
     bcrypt.hash(req.body.password, 10)
         .then(hash => {
             const user = new User({
