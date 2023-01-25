@@ -34,6 +34,7 @@ app.use((req, res, next) => {
     next()
 })
 
+// sauces route //
 app.use('/api/sauces', saucesRoutes)
 
 // authentication route //
