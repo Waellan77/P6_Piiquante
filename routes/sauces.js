@@ -13,7 +13,7 @@ const multer = require('../middleware/multer-config')
 // import sauces controllers //
 const saucesCtrl = require('../controllers/sauces')
 
-// routes with authentication middleware //
+// routes with authentication middleware and multer middleware //
 router.get('/', auth, saucesCtrl.getAllSauce)
 router.post('/', auth, multer, saucesCtrl.createSauce)
 router.get('/:id', auth, saucesCtrl.getOneSauce)
