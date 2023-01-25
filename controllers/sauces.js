@@ -5,13 +5,16 @@ const Sauce = require('../models/sauces')
 const fs = require('fs')
 
 exports.createSauce = (req, res, next) => {
+    // parse the request object //
     const sauceObject = JSON.parse(req.body.sauce)
-
+    // delete _id and  _userId //
     delete sauceObject._id
     delete sauceObject._userId
     const sauce = new Sauce({
         ...sauceObject,
+        // we replace the _userId extracted from the token by the authentication middleware //
         userId: req.auth.userId,
+        // we generate the URL of the image //
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
         likes: 0,
         dislikes: 0,
