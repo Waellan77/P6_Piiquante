@@ -4,7 +4,7 @@ const express = require('express')
 // mongoose import //
 const mongoose = require('mongoose')
 
-
+// import the paths of the images //
 const path = require('path')
 
 // routes import //
@@ -40,7 +40,7 @@ app.use('/api/sauces', saucesRoutes)
 // authentication route //
 app.use('/api/auth', userRoutes)
 
-
+// routes that manage static files //
 app.use('/images', express.static(path.join(__dirname, 'images')))
 
 // export the application to other files with module.exports //
