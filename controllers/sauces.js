@@ -4,6 +4,7 @@ const Sauce = require('../models/sauces')
 // Import of node.js module to access server files //
 const fs = require('fs')
 
+// create sauce //
 exports.createSauce = (req, res, next) => {
     // parse the request object //
     const sauceObject = JSON.parse(req.body.sauce)
@@ -27,18 +28,27 @@ exports.createSauce = (req, res, next) => {
         .catch(error => { res.status(400).json({ error }) })
 }
 
+// update (modify) sauce // 
 exports.modifySauce = (req, res, next) => {
-    const sauceObject = req.file ? {
-        ...JSON.parse(req.body.sauce),
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-    } : { ...req.body }
-
+    // check if there is a file or not //
+    const sauceObject = req.file ?
+        { // if yes, we parse the string and recreate the image url //
+            ...JSON.parse(req.body.sauce),
+            imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+        } : { // otherwise we get the sauce in the body of the request // 
+            ...req.body
+        }
+    // remove userId from the request //
     delete sauceObject._userId
+    // recover the sauce in the DB //
     Sauce.findOne({ _id: req.params.id })
         .then((sauce) => {
+            // we check that the userId is the same as the one who created the sauce // 
+            // if it is different, we get a 401 error //
             if (sauce.userId != req.auth.userId) {
                 res.status(401).json({ message: 'Non-autorisé' })
             } else {
+                // If it's the same then we update the sauce //
                 Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
                     .then(() => res.status(200).json({ message: 'Sauce modifiée !' }))
                     .catch(error => res.status(401).json({ error }))
@@ -49,19 +59,28 @@ exports.modifySauce = (req, res, next) => {
         })
 }
 
+// delete sauce //
 exports.deleteSauce = (req, res, next) => {
+    // recover the sauce in the DB //
     Sauce.findOne({ _id: req.params.id })
         .then(sauce => {
+            // we check that the userId is the same as the one who created the sauce //
+            // if it is different, we get a 401 error //
             if (sauce.userId != req.auth.userId) {
                 res.status(401).json({ message: 'Non-autorisé' })
             } else {
+                // If it's the same then we get the name of the file //
                 const filename = sauce.imageUrl.split('/images/')[1]
-                Sauce.deleteOne({ _id: req.params.id })
-                    .then(() => {
-                        res.status(200).json({ message: 'Sauce supprimée !' })
-                        fs.unlinkSync(`images/${filename}`)
-                    })
-                    .catch(error => res.status(401).json({ error }))
+                // we remove the image with unlink //
+                fs.unlink(`images/${filename}`, () => {
+                    // we remove the sauce in the DB //
+                    Sauce.deleteOne({ _id: req.params.id })
+                        .then(() => {
+                            res.status(200).json({ message: 'Sauce supprimée !' })
+
+                        })
+                        .catch(error => res.status(401).json({ error }))
+                })
             }
         })
         .catch(error => {
@@ -69,18 +88,23 @@ exports.deleteSauce = (req, res, next) => {
         })
 }
 
+// read (get) one sauce //
 exports.getOneSauce = (req, res, next) => {
+    // We use "findOne" with the id of the sauce we want to find //
     Sauce.findOne({ _id: req.params.id })
         .then(sauces => res.status(200).json(sauces))
         .catch(error => res.status(404).json({ error }))
 }
 
+// read (get) all sauce //
 exports.getAllSauce = (req, res, next) => {
+    // We use "find" to get the list of all the sauces in the DB //
     Sauce.find()
         .then(sauces => res.status(200).json(sauces))
         .catch(error => res.status(400).json({ error }))
 }
 
+// like or dislike sauce //
 exports.likeSauce = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id })
         .then(sauce => {
