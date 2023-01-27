@@ -48,10 +48,21 @@ exports.modifySauce = (req, res, next) => {
             if (sauce.userId != req.auth.userId) {
                 res.status(401).json({ message: 'Non-autorisé' })
             } else {
-                // If it's the same then we update the sauce //
-                Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
-                    .then(() => res.status(200).json({ message: 'Sauce modifiée !' }))
-                    .catch(error => res.status(401).json({ error }))
+                // If it's the same then we get the name of the file //
+                const filename = sauce.imageUrl.split('/images/')[1]
+                // if we change the image and its name is different from filename //
+                if (req.file && req.file.filename != filename) {
+                    // we delete the old image and update the sauce //
+                    fs.unlink(`images/${filename}`, () => {
+                        Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
+                            .then(() => res.status(200).json({ message: 'Sauce modifiée !' }))
+                            .catch(error => res.status(401).json({ error }))
+                    })
+                } else { // else update the sauce //
+                        Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
+                            .then(() => res.status(200).json({ message: 'Sauce modifiée !' }))
+                            .catch(error => res.status(401).json({ error }))
+                }
             }
         })
         .catch((error) => {
